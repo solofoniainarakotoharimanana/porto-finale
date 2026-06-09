@@ -1,0 +1,18 @@
+import jwt from "jsonwebtoken";
+
+export const generateToken = (userId, res) => {
+	// Signs the user ID with your secret key, expiring in 30 days
+    const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+        expiresIn: '30d',
+    });
+    
+    res.cookie("jwt", token, {
+        maxAge: 15 * 24 * 60 * 60 * 1000, //MS
+        httpOnly: true, // prevent XSS attacks cross-site scripting attacks
+        // sameSite: "none", // CSRF attacks cross-site request forgery attacks
+        sameSite: "strict", // CSRF attacks cross-site request forgery attacks ===> IMPORTANT 
+        secure: process.env.NODE_ENV !== "development",
+    });
+
+    return token;
+};

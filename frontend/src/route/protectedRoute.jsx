@@ -1,0 +1,18 @@
+import { Navigate, Outlet } from "react-router-dom"
+
+
+
+const ProtectedRoute = ({ token }) => {
+
+    if (!token) {
+        return <Navigate to="/login" replace />
+    }
+
+    return (
+        <div>
+            <Outlet />
+        </div>
+    )
+}
+
+export default ProtectedRoute;
