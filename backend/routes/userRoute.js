@@ -2,6 +2,7 @@ import express from "express"
 import {
     createProject,
     followUnfollowCompany,
+    getProjectById,
     getProjectsByUser,
     sendRequestForRealization
 } from "../controllers/userController.js";
@@ -9,10 +10,10 @@ import { getMe } from "../controllers/authController.js";
 
 import {protectRoute} from "../middleware/protectRoute.js"
 
-
 const router = express.Router();
 
 router.get('/my-projects', protectRoute, getProjectsByUser)
+router.get('/project-detail/:projectId', protectRoute, getProjectById)
 router.post('/create-project', protectRoute, createProject)
 router.post('/follow-company/:companyId', protectRoute, followUnfollowCompany)
 

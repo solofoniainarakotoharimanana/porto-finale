@@ -8,7 +8,10 @@ import RequestRealization from "../models/requestForRealization.js"
 export const getProjectsByUser = async (req, res) => {
     try {
         const userId = req.user._id;
-        console.log("USER ID >>> ", userId)
+        const pageNumber = +req.query.pageNumber || 1;
+        const pageSize = process.env.PAGINATION_LIMIT;
+
+        // console.log("USER ID >>> ", userId)
         const userConnected = await User.findById(userId);
         if (!userConnected) {
             return res.status(400).json({
@@ -17,16 +20,20 @@ export const getProjectsByUser = async (req, res) => {
             })
         }
 
-
-        const projectByUserConnected = await Project.find({ owner: userConnected._id })
+        const query = { owner: userConnected._id };
+        const projectByUserConnected = await Project.find(query)
             .populate("category", "title")
-            .populate("owner", "username firstname lastname")
+            .populate("owner", "username firstname lastname");
+        console.log(projectByUserConnected)
+        
+        const count = await Project.countDocuments(query);
             
-
         return res.status(200).json({
             success: true,
             message: "Projects of the user connected",
-            projects: projectByUserConnected
+            projects: projectByUserConnected,
+            pageNumber,
+            pages: Math.ceil(count/pageSize)
         })
     } catch (error) {
         return res.status(500).json({
@@ -157,6 +164,30 @@ export const createProject = async (req, res) => {
             message: "Project created successfully",
             newProject
         })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+export const getProjectById = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const projectId = req.params.projectId;
+        const project = await Project.findById(projectId);
+        if (!project) {
+            return res.status(400).json({
+                error: "Project not found"
+            })
+        }
+
+        res.status(200).json({
+            project
+        })
+
         
     } catch (error) {
         return res.status(500).json({

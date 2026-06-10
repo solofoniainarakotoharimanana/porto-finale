@@ -32,6 +32,7 @@ function App() {
 
           <Route element={<ProtectedRoute token={token} />}>
             <Route path="/user-dashboard" element={<HomeUser />} />
+            <Route path="/page/:pageNumber" element={<HomeUser />} />
             <Route path="/user-company" element={<HomeCompany />} />
           </Route>
 

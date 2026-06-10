@@ -3,6 +3,9 @@ import TitleComponent from './TitleComponent'
 import { List, Pencil, Plus } from 'lucide-react'
 import NewProject from './NewProject';
 import useProjectStore from '../store/projectStore';
+import Paginate from './Paginate';
+import { useParams } from 'react-router-dom';
+import Modal from '../utils/Modal';
 
 
 const companies = [
@@ -28,15 +31,47 @@ const companies = [
 
 const ListAndNewProject = () => {
 
+    const pageNumber = useParams();
+
+    const statusColorAndValue = (status) => {
+        switch (status) {
+            case "created":
+                return ["text-blue-500", "CREATED"]
+                break;
+            case "in progress":
+                return ["text-orange-500", "IN PROGRESS"]
+                break;
+            case "finished":
+                return ["text-green-500", "FINISHED"]
+                break;
+
+            default:
+                break;
+        }
+    }
+
+
     const [isNewProject, setIsNewProject] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const {
+        project,
         projects,
+        pages,
+        page,
         getProjectOfUserConnected,
+        getDetailOfUserProject
     } = useProjectStore();
 
     useEffect(() => {
         getProjectOfUserConnected()
     }, [])
+
+    const handleOpenModal = (projectId) => {
+        setIsModalOpen(true);
+        getDetailOfUserProject(projectId);
+    }
+    console.log("MY PROJECT >>> ", project)
 
     return (
         <div className='lg:w-[70%] xl:w-[70%] md:w-[100%] sm:w-[100%] shadow-md bg-white lg:p-4 xl:p-4 md:p-2 rounded-sm'>
@@ -97,8 +132,10 @@ const ListAndNewProject = () => {
                                                     <span className='font-bold'>{p.category.title}</span>
                                                 </div>
                                                 <div className='flex p-3 justify-between w-full'>
-                                                    <p className='text-md font-semibold text-orange-500 self-end'>{p.status}</p>
-                                                    <button className='self-end 
+                                                    <p className={`text-md font-bold ${statusColorAndValue(p.status)[0]} self-end`}>{`${statusColorAndValue(p.status)[1]}`}</p>
+                                                    <button
+                                                        onClick={() => handleOpenModal(p._id)}
+                                                        className='self-end 
                                             border-1 border-bg-rose-600 bg-transparent
                                             text-orange-600 px-3 py-2 rounded-md
                                             hover:bg-orange-600 hover:text-white hover:border-gray-100
@@ -117,6 +154,20 @@ const ListAndNewProject = () => {
                         </div>
                     )
             }
+            <div className='flex justify-center mt-12'>
+                <Paginate pages={pages} page={page} keyword="" />
+            </div>
+
+            {/* MODAL */}
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title={project?.title || ""}
+                data={project}
+            >
+                {/* <p>This is a native HTML5 dialog styled with simple CSS.</p> */}
+                <button onClick={() => setIsModalOpen(false)}>Confirm</button>
+            </Modal>
         </div>
     )
 }
