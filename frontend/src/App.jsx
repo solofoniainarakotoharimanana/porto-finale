@@ -16,6 +16,7 @@ import HomeUser from './pages/home/HomeUser.jsx';
 import HomeCompany from './pages/home/HomeCompany.jsx';
 import useAuthStore from './store/store.js';
 import { useEffect, useState } from 'react';
+import ProjectAccordingStatus from './pages/user/ProjectAccordingStatus.jsx';
 
 function App() {
   const { token, user } = useAuthStore(state => state)
@@ -32,7 +33,7 @@ function App() {
 
           <Route element={<ProtectedRoute token={token} />}>
             <Route path="/user-dashboard" element={<HomeUser />} />
-            <Route path="/page/:pageNumber" element={<HomeUser />} />
+            <Route path="/projects-according-status" element={<ProjectAccordingStatus />} />
             <Route path="/user-company" element={<HomeCompany />} />
           </Route>
 

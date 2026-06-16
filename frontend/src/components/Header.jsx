@@ -11,9 +11,9 @@ const Header = ({ token, logoutUser, user }) => {
     const navigate = useNavigate();
     const navigation = [
         { name: "Home", href: "#" },
-        { name: "Features", href: "#" },
-        { name: "Marketplace", href: "#" },
-        { name: "Company", href: "#" },
+        { name: "My Request", href: "#" },
+        // { name: "Marketplace", href: "#" },
+        // { name: "Company", href: "#" },
     ];
     const handleLogout = () => {
         logoutUser();
@@ -35,7 +35,7 @@ const Header = ({ token, logoutUser, user }) => {
                     </div>
 
                     {/* Desktop Navigation Links */}
-                    {/* <div className="hidden md:block">
+                    <div className="hidden md:block">
                         <div className="ml-10 flex items-baseline space-x-8">
                             {navigation.map((item) => (
                                 <a
@@ -47,14 +47,14 @@ const Header = ({ token, logoutUser, user }) => {
                                 </a>
                             ))}
                         </div>
-                    </div> */}
+                    </div>
 
                     {/* Desktop CTA Button */}
                     <div className="hidden md:block">
                         {
                             token ? (
                                 <div className='flex gap-4 justify-end align-center'>
-                                    <span className='text-white font-bold text-md self-end'>Welcome {user?.firstname} {user?.lastname}</span>
+                                    <span className='text-white font-thin text-sm self-center'>Welcome {user?.firstname} {user?.lastname}</span>
                                     <img src={avatar} className='w-8 h-8 rounded-full object-cover self-end' />
                                     <div className='relative self-center'>
                                         {/* <span class="flex align-center left-1.5 top-0
@@ -145,7 +145,7 @@ const Header = ({ token, logoutUser, user }) => {
                                     key={item.name}
                                     href={item.href}
                                     onClick={() => setIsOpen(false)}
-                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-gray-800"
+                                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-bold text-md text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-gray-800"
                                 >
                                     {item.name}
                                 </a>

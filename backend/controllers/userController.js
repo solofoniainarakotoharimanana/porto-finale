@@ -177,7 +177,8 @@ export const getProjectById = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
         const projectId = req.params.projectId;
-        const project = await Project.findById(projectId);
+        const project = await Project.findById(projectId)
+        .populate("category", "title");
         if (!project) {
             return res.status(400).json({
                 error: "Project not found"

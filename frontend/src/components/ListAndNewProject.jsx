@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import TitleComponent from './TitleComponent'
-import { List, Pencil, Plus } from 'lucide-react'
+import { List, Pencil, Plus, Send } from 'lucide-react'
 import NewProject from './NewProject';
 import useProjectStore from '../store/projectStore';
 import Paginate from './Paginate';
-import { useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import Modal from '../utils/Modal';
+import { statusColorAndValue } from '../utils/colorStatus.js';
+import { extractText } from "../utils/helper.js"
 
 
 const companies = [
@@ -33,23 +35,6 @@ const ListAndNewProject = () => {
 
     const pageNumber = useParams();
 
-    const statusColorAndValue = (status) => {
-        switch (status) {
-            case "created":
-                return ["text-blue-500", "CREATED"]
-                break;
-            case "in progress":
-                return ["text-orange-500", "IN PROGRESS"]
-                break;
-            case "finished":
-                return ["text-green-500", "FINISHED"]
-                break;
-
-            default:
-                break;
-        }
-    }
-
 
     const [isNewProject, setIsNewProject] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,10 +56,10 @@ const ListAndNewProject = () => {
         setIsModalOpen(true);
         getDetailOfUserProject(projectId);
     }
-    console.log("MY PROJECT >>> ", project)
+    // console.log("MY PROJECT >>> ", project)
 
     return (
-        <div className='lg:w-[70%] xl:w-[70%] md:w-[100%] sm:w-[100%] shadow-md bg-white lg:p-4 xl:p-4 md:p-2 rounded-sm'>
+        <div className='lg:w-[70%] xl:w-[70%] md:w-full sm:w-full shadow-md bg-white lg:p-4 xl:p-4 md:p-2 rounded-sm'>
             {
                 isNewProject ?
                     <button
@@ -124,26 +109,41 @@ const ListAndNewProject = () => {
                                                     {p.title}
                                                 </h1>
                                                 <hr className='border-1 border-gray-300'></hr>
-                                                <p className='text-center text-md p-3 text-gray-400 '>
-                                                    {p.description}
+                                                <p className='text-justify indent-4 text-md p-3 text-gray-400 '>
+                                                    {extractText(p.description)} ...
                                                 </p>
                                                 <div className='flex gap-2 p-3'>
                                                     <span className='text-md text-blue-500'>Category:</span>
                                                     <span className='font-bold'>{p.category.title}</span>
                                                 </div>
-                                                <div className='flex p-3 justify-between w-full'>
+                                                <div className='flex p-3  w-full'>
                                                     <p className={`text-md font-bold ${statusColorAndValue(p.status)[0]} self-end`}>{`${statusColorAndValue(p.status)[1]}`}</p>
-                                                    <button
-                                                        onClick={() => handleOpenModal(p._id)}
-                                                        className='self-end 
-                                            border-1 border-bg-rose-600 bg-transparent
-                                            text-orange-600 px-3 py-2 rounded-md
-                                            hover:bg-orange-600 hover:text-white hover:border-gray-100
-                                            transition-colors duration-500  cursor-pointer
-                                            font-extrabold flex gap-2'>
-                                                        <Pencil size={20} />
-                                                        Detail
-                                                    </button>
+                                                    <div className='flex ml-auto gap-3 '>
+                                                        {p.status === "created" && <NavLink
+                                                            className="py-2 px-3 
+                                                            bg-blue-700 rounded-lg
+                                                            hover:bg-blue-800 hover:text-slate-300
+                                                             text-slate-200 flex gap-1"
+                                                            to="/"
+                                                        >
+                                                            <Send className='self-center'
+                                                                size={15} />
+                                                            Submit Request
+                                                        </NavLink>}
+
+                                                        <button
+                                                            onClick={() => handleOpenModal(p._id)}
+                                                            className='self-end 
+                                                                border-1 border-bg-rose-600 bg-transparent
+                                                                text-orange-600 px-3 py-2 rounded-md
+                                                                hover:bg-orange-600 hover:text-white hover:border-gray-100
+                                                                transition-colors duration-500  cursor-pointer
+                                                                font-normal flex gap-1'>
+                                                            <Pencil className='self-center'
+                                                                size={15} />
+                                                            Detail
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -162,7 +162,6 @@ const ListAndNewProject = () => {
             <Modal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                title={project?.title || ""}
                 data={project}
             >
                 {/* <p>This is a native HTML5 dialog styled with simple CSS.</p> */}
@@ -172,4 +171,4 @@ const ListAndNewProject = () => {
     )
 }
 
-export default ListAndNewProject
+export default React.memo(ListAndNewProject)

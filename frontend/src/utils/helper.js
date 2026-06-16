@@ -38,3 +38,24 @@ export const validateAvatar = (file) => {
 
   return "";
 }
+
+export const extractText = (text) => {
+  const wordsCount = countWords(text);
+  if (wordsCount > 20) {
+    const extracted = text.split(/\s+/).slice(0, 25).join(' ');
+
+    return extracted;
+  }
+
+  return text;
+  
+}
+
+export const countWords = (str) => {
+  const trimmed = str.trim();
+  // Return 0 if the string is empty to avoid counting an empty element
+  if (trimmed === "") return 0; 
+  
+  // \s+ matches one or more spaces, tabs, or newlines
+  return trimmed.split(/\s+/).length;
+}

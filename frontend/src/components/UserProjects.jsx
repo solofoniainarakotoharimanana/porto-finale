@@ -1,49 +1,66 @@
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import TitleComponent from './TitleComponent'
 import useProjectStore from '../store/projectStore'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import ModalProjectList from '../utils/ModalProjectList'
+import { useNavigate } from 'react-router-dom'
+import { useFetchProjectsViaStatus } from '../utils/hooks'
+
+
 
 const Userprojects = () => {
-    const { projects, getProjectOfUserConnected } = useProjectStore(state => state)
-    const [projectCreated, setProjectCreated] = useState([])
-    const [projectInProgress, setProjectInProgress] = useState([])
-    const [projectFinished, setProjectFinished] = useState([])
+    const navigate = useNavigate();
+
+    const [projectsCreated, setProjectsCreated] = useState([])
+    const [projectsInProgress, setProjectsInProgress] = useState([])
+    const [projectsFinished, setProjectsinished] = useState([])
+
+    const {
+        projects,
+        getProjectOfUserConnected,
+        getProjectByStatus,
+        setStatus,
+        statusClicked
+    } = useProjectStore(state => state)
 
     useEffect(() => {
-        getProjectOfUserConnected()
+        getProjectOfUserConnected();
     }, [])
 
     useEffect(() => {
-        setProjectCreated((projects?.filter((p) => p.status === "created")))
-        setProjectInProgress((projects?.filter((p) => p.status === "in progress")))
-        setProjectFinished((projects?.filter((p) => p.status === "finished")))
+        setProjectsCreated(getProjectByStatus("created"));
+        setProjectsInProgress(getProjectByStatus("in progress"));
+        setProjectsinished(getProjectByStatus("finished"));
     }, [projects])
 
-    // console.log("PROJECT >>>", projectCreated, projectInProgress, projectFinished)
+    const handleSeeAllClick = (status) => {
+        setStatus(status);
+        navigate("/projects-according-status")
+    }
+    console.log("USER PROJECTS >>> ")
 
     return (
         <div>
             <TitleComponent title="My project infos" />
             <div
-                className='grid 
+                className='grid
                     xl:grid-cols-3 lg:grid-cols-3
                     md:grid-cols-2 sm:grid-cols-1 gap-4'>
                 <div className='bg-blue-700 rounded-sm p-5 shadow-lg hover:translate-y-1 transition delay-150 duration-300'>
                     <div className='flex justify-center align-center gap-5 text-white'>
                         <p className=' font-bold text-4xl'>
-                            {projectCreated?.length}
+                            {projectsCreated?.length}
                         </p>
-                        <h1 className='self-end font-bold text-4xl '>Project{projectCreated?.length > 1 ? "s" : ""} Created</h1>
+                        <h1 className='self-end font-bold text-4xl '>Project{projectsCreated?.length > 1 ? "s" : ""} Created</h1>
                     </div>
                     <div className='text-sm text-gray-100 my-3'>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil modi sapiente praesentium perspiciatis! Modi, perferendis!
                     </div>
                     <div className='flex justify-end'>
                         <button
-                            // onClick={() => setIsModalOpen(true)}
-                            // onClick={() => openModal(fetchCreatedProjects(), "List project created")}
-                            className='bg-slate-300 
+                            onClick={() => handleSeeAllClick('created')}
+                            className='bg-slate-300
                             py-2 px-3 rounded-lg text-sm cursor-pointer
                              text-blue-600 font-semibold hover:text-blue-500 hover:bg-slate-2'
                             href='#'>See all </button>
@@ -52,17 +69,16 @@ const Userprojects = () => {
                 </div>
                 <div className='bg-orange-500 rounded-sm p-5 shadow-lg hover:translate-y-1 transition delay-150 duration-300'>
                     <div className='flex justify-center align-center gap-5 text-white'>
-                        <p className=' font-bold text-4xl'>{projectInProgress?.length}</p>
-                        <h1 className='self-end font-bold text-4xl '>Project{projectInProgress?.length > 1 ? "s" : ""}  In Progress</h1>
+                        <p className=' font-bold text-4xl'>{projectsInProgress?.length}</p>
+                        <h1 className='self-end font-bold text-4xl '>Project{projectsInProgress?.length > 1 ? "s" : ""}  In Progress</h1>
                     </div>
                     <div className='text-sm text-white my-3'>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil modi sapiente praesentium perspiciatis! Modi, perferendis!
                     </div>
                     <div className='flex justify-end'>
                         <button
-                            // onClick={() => setIsModalOpen(true)}
-                            // onClick={() => openModal(fetchInProgressProjects(), "List project in progress")}
-                            className='bg-slate-300 
+                            onClick={() => handleSeeAllClick('in progress')}
+                            className='bg-slate-300
                             py-2 px-3 rounded-lg text-sm cursor-pointer
                              text-blue-600 font-semibold hover:text-blue-500 hover:bg-slate-2'
                             href='#'>See all </button>
@@ -71,17 +87,16 @@ const Userprojects = () => {
                 </div>
                 <div className='bg-green-500 rounded-sm p-5 shadow-lg hover:translate-y-1 transition delay-150 duration-300'>
                     <div className='flex justify-center align-center gap-5 text-white'>
-                        <p className=' font-bold text-4xl'>{projectFinished?.length}</p>
-                        <h1 className='self-end font-bold text-4xl '>Project{projectFinished?.length > 1 ? "s" : ""} Finished</h1>
+                        <p className=' font-bold text-4xl'>{projectsFinished?.length}</p>
+                        <h1 className='self-end font-bold text-4xl '>Project{projectsFinished?.length > 1 ? "s" : ""} Finished</h1>
                     </div>
                     <div className='text-sm text-white my-3'>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil modi sapiente praesentium perspiciatis! Modi, perferendis!
                     </div>
                     <div className='flex justify-end'>
                         <button
-                            // onClick={() => openModal(fetchFinishedProjects(), "List project finished")}
-                            // onClick={() => setIsModalOpen(true)}
-                            className='bg-slate-300 
+                            onClick={() => handleSeeAllClick('finished')}
+                            className='bg-slate-300
                             py-2 px-3 rounded-lg textSee all cursor-pointer
                              text-blue-600 font-semibold hover:text-blue-500 hover:bg-slate-2'
                             href='#'>See all </button>
@@ -92,4 +107,4 @@ const Userprojects = () => {
     )
 }
 
-export default Userprojects
+export default React.memo(Userprojects)
