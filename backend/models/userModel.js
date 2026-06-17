@@ -49,7 +49,7 @@ const userSchema = mongoose.Schema({
     likedProject: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Post",
+            ref: "Project",
         },
     ],
 }, { timestamp: true})

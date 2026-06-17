@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 import API from "../utils/api.js";
-import { use } from "react";
+// import { use } from "react";
 import { immer } from 'zustand/middleware/immer';
 
 
@@ -39,6 +39,15 @@ const useProjectStore = create(
         },
         setStatus: (status) => {
             set({ statusClicked: status });
+        },
+        likeDislikeProject: async (projectId) => {
+            const response = await API.post(`user/like-project/${projectId}`)
+            const proj = response.data.project;
+            const user = response.data.user;
+
+            // console.log(response)
+
+            return [proj, user];
         }
     })
 )

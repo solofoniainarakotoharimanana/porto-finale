@@ -3,10 +3,8 @@ import TitleComponent from './TitleComponent'
 import useProjectStore from '../store/projectStore'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import ModalProjectList from '../utils/ModalProjectList'
-import { useNavigate } from 'react-router-dom'
-import { useFetchProjectsViaStatus } from '../utils/hooks'
 
+import { useNavigate } from 'react-router-dom'
 
 
 const Userprojects = () => {
@@ -38,7 +36,6 @@ const Userprojects = () => {
         setStatus(status);
         navigate("/projects-according-status")
     }
-    console.log("USER PROJECTS >>> ")
 
     return (
         <div>

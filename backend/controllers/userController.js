@@ -47,7 +47,9 @@ export const followUnfollowCompany = async (req, res) => {
     try {
         const { companyId } = req.params;
         const user = await User.findById(req.user._id);
+        
         const company = await User.findByIdAndUpdate(companyId);
+        
 
         if (companyId.toString() === req.user._id.toString()) {
             res.status(400).json({
@@ -192,6 +194,73 @@ export const getProjectById = async (req, res) => {
         
     } catch (error) {
         return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+export const likeProject = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const projectId = req.params.projectId;
+        const project = await Project.findById(projectId)
+
+        if (!user) {
+            return res.status(400).json({
+                error: "User not found"
+            })
+        }
+
+        if (!project) {
+            return res.status(400).json({
+                error: "Project not found"
+            })
+        }
+
+        const isLiked = project.likes.includes(user._id);
+        // console.log("IS LIKED >>> ", isLiked)
+        if (!isLiked) {
+            
+            await Project.findByIdAndUpdate(projectId, {
+                $push: {likes: user._id}
+            })
+            await User.findByIdAndUpdate(user._id, {
+                $push: {likedProject: projectId}
+            })
+        } else {
+            await Project.findByIdAndUpdate(projectId, {
+                $pull: {likes: user._id}
+            })
+            await User.findByIdAndUpdate(user._id, {
+                $pull: {likedProject: projectId}
+            })
+        }
+        
+        res.status(200).json({
+            message: "User liked project successfully.",
+            project,
+            user
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+
+export const getCompanies = async (req, res) => {
+    try {
+        const companies = await User.find({ role: "company" })
+        
+        res.status(200).json({
+            companies
+        })
+        
+    } catch (error) {
+         return res.status(500).json({
             success: false,
             message: error.message
         })

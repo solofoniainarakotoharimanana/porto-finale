@@ -1,8 +1,10 @@
 import {create} from "zustand"
 import axios from "axios"
-const BASE_URL = "http://localhost:5000/api"
+
 import { immer } from "zustand/middleware/immer";
 import API from "../utils/api";
+
+const BASE_URL = "http://localhost:5000/api"
 
 const useAuthStore = create(
     (set) => ({

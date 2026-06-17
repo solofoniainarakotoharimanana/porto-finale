@@ -32,7 +32,7 @@ const projectSchema = mongoose.Schema({
     likes: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "User",
+			ref: "user",
 		},
 	],
 	comments: [
@@ -48,7 +48,7 @@ const projectSchema = mongoose.Schema({
 			},
 		},
 	],
-}, { timestamp: true });
+}, { timestamps: true });
 
 const Project = mongoose.model("Project", projectSchema);
 
