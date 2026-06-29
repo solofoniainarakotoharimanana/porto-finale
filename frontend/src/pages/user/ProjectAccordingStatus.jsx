@@ -64,9 +64,6 @@ const ProjectAccordingStatus = () => {
         <div>
             <Header token={token} user={user} logoutUser={logoutUser} />
             <main className='container mx-auto'>
-                {/* {projectsToSee?.map((p) => {
-                    return <li key={p._id}>{p.title}</li>
-                })} */}
                 <TitleComponent title={titlePage} />
                 <CategoryList
                     catToFilter={catToFilter}

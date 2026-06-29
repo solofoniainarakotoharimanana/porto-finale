@@ -6,7 +6,8 @@ import {
     getProjectsByUser,
     sendRequestForRealization,
     likeProject,
-    getCompanies
+    getCompanies,
+    getCompanyById
 } from "../controllers/userController.js";
 import { getMe } from "../controllers/authController.js";
 
@@ -20,6 +21,7 @@ router.post('/create-project', protectRoute, createProject)
 router.post('/like-project/:projectId', protectRoute, likeProject)
 router.post('/follow-company/:companyId', protectRoute, followUnfollowCompany)
 router.get('/get-company', protectRoute, getCompanies)
+router.get('/get-company/:companyId', protectRoute, getCompanyById)
 
 router.post('/request-realization/:projectId', protectRoute, sendRequestForRealization);
 router.get('/me', protectRoute, getMe)

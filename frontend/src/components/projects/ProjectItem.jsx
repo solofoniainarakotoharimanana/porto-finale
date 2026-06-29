@@ -4,18 +4,49 @@ import moment from "moment"
 import useProjectStore from '../../store/projectStore'
 import useAuthStore from '../../store/store'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import useRequestStore from '../../store/requestStore'
+import { useEffect } from 'react'
 
 
 const ProjectItem = ({ project }) => {
+    const { getRequestViaProject } = useRequestStore(state => state)
+    const { getProjectById } = useProjectStore()
+    const navigate = useNavigate();
     const { likeDislikeProject } = useProjectStore();
     const { user } = useAuthStore(state => state);
-    const [likes, setLikes] = useState(project.likes);
-    const isLiked = likes.includes(user._id);
+    const [likes, setLikes] = useState(project?.likes);
+    const isLiked = likes.includes(user?._id);
+
+    const [requestOfProject, setRequestOfProject] = useState(null);
+    // const { getProjectById } = useProjectStore();
+
+    // const checkrequestViaProject = async () => {
+    //     return await getRequestViaProject(project._id);
+    // }
+    useEffect(() => {
+        const checkrequestViaProject = async () => {
+            const response = await getRequestViaProject(project?._id);
+            if (response) {
+                setRequestOfProject(response)
+            }
+            // console.log("RESPONSES >>> ", response);
+        };
+
+        checkrequestViaProject();
+
+        // setRequestOfProject(responseData);
+    }, [])
 
     const handleLikeProject = async (projectId) => {
         const response = await likeDislikeProject(projectId);
         setLikes(response[0].likes)
     }
+    const handleClick = async (projectId) => {
+        const project = await getProjectById(projectId);
+        navigate(`/completion-request/${projectId}`, { state: project });
+    }
+
     return (
         <div className='border-1 border-slate-400 rounded-md shadow-md'>
             <h3 className={`text-center  w-full font-bold border-b-1 pb-3 pt-8 bg-blue-500 text-white uppercase`}>{project.title}</h3>
@@ -44,20 +75,28 @@ const ProjectItem = ({ project }) => {
                 </div>
             </div>
             <div className='p-4 flex justify-end w-full'>
-                <button
-                    className='bg-blue-700 
-                    text-white text-sm
-                    py-2 px-2 rounded-md
-                    cursor-pointer flex gap-1 w-fit
-                    transition-all duration-300
-                    hover:bg-blue-600 hovver:text-white/75
-                    hover:-translate-y-1 hover:shadow-md
-                    '>
-                    <Send size={15} />
-                    Submit request
-                </button>
-            </div>
-        </div>
+                {
+                    !requestOfProject ? (
+                        <button
+                            onClick={() => handleClick(project._id)}
+                            className='bg-blue-700 
+                            text-white text-sm
+                            py-2 px-2 rounded-md
+                            cursor-pointer flex gap-1 w-fit
+                            transition-all duration-300
+                            hover:bg-blue-600 hovver:text-white/75
+                            hover:-translate-y-1 hover:shadow-md
+                            '>
+                            <Send size={15} />
+                            Submit request
+                        </button>
+                    ) :
+                        <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 inset-ring inset-ring-green-600/20">Request already sent, awaiting response</span>
+
+                }
+
+            </div >
+        </div >
     )
 }
 

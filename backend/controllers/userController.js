@@ -24,7 +24,7 @@ export const getProjectsByUser = async (req, res) => {
         const projectByUserConnected = await Project.find(query)
             .populate("category", "title")
             .populate("owner", "username firstname lastname");
-        console.log(projectByUserConnected)
+        // console.log(projectByUserConnected)
         
         const count = await Project.countDocuments(query);
             
@@ -66,7 +66,7 @@ export const followUnfollowCompany = async (req, res) => {
         }
 
         const isFollowers = company.followers.includes(user._id);
-        console.log(isFollowers)
+        
         if (isFollowers) {
             await User.findByIdAndUpdate(companyId, {
                 $pull: {followers: user._id}
@@ -259,6 +259,29 @@ export const getCompanies = async (req, res) => {
             companies
         })
         
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+export const getCompanyById = async (req, res) => {
+    try {
+        
+        const companyId = req.params.companyId;
+        const company = await User.findById(companyId);
+
+        if (!company) {
+            return res.status(400).json({
+                error: "Company not found"
+            })
+        }
+
+        res.status(200).json({
+            company
+        })
     } catch (error) {
          return res.status(500).json({
             success: false,

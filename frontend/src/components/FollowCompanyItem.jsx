@@ -17,7 +17,6 @@ const FollowCompanyItem = ({ company }) => {
     const handleFollowCompany = async (companyId) => {
         await followUnfollowCompany(companyId);
         setFollows(company.followers)
-        console.log("IS FOLLOWED >> ", isFollowed)
     }
 
 

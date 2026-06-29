@@ -45,11 +45,14 @@ const useProjectStore = create(
             const proj = response.data.project;
             const user = response.data.user;
 
-            // console.log(response)
-
             return [proj, user];
+        },
+        getProjectById: async (projectId) => {
+            const response = await API.get(`user/project-detail/${projectId}`);
+
+            return response?.data?.project;
         }
-    })
+    }),
 )
 
 export default useProjectStore;

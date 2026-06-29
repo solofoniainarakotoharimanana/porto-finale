@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 import userRoute from "./routes/userRoute.js"
 import categoryRoute from "./routes/categoryRoute.js"
+import requestRoute from "./routes/requestRoute.js"
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use(express.json());//TO PARSE req.body
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoute)
 app.use("/api/category", categoryRoute)
+app.use("/api/request", requestRoute)
 
 const port = process.env.PORT || 5000
 

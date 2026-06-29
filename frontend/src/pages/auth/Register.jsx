@@ -119,12 +119,8 @@ const Register = () => {
         })
 
         setFormState((prev) => ({ ...prev, errors }));
-        console.log("FORM STATE >>> ", Object.keys(errors))
-        // console.log("FORM STATE >>> ", Object.keys(errors) === 0)
 
         return Object.keys(errors).length === 0;
-
-        // return Object.keys(errors) === 0;
     }
 
     const handleSubmit = async (e) => {
